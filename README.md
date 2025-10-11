@@ -2,104 +2,101 @@
 
 ## Overview
 
-โปรเจกต์นี้เป็น **Web Mockup Login** แบบง่าย สำหรับ **Project Deployment & CI/CD Practice**
+โปรเจกต์นี้เป็น **Web Mockup Login** แบบง่าย สำหรับ **Project Deployment & CI/CD Practice**  
 
-* ทำหน้า Login page แบบ HTML + JS
-* เก็บ username/password แบบง่ายใน array
-* ใช้ Docker container serve หน้าเว็บด้วย **nginx**
-* มี Robot Framework test สำหรับตรวจสอบหน้าเว็บ
-* พร้อม GitHub Actions workflow สำหรับ **auto build → test → push Docker image**
+- หน้า Login page แบบ HTML + JS  
+- เก็บ username/password แบบง่ายใน array  
+- ใช้ Docker container serve หน้าเว็บด้วย **nginx**  
+- มี **Unit Test** ด้วย **Jest** สำหรับตรวจสอบฟังก์ชัน login  
+- GitHub Actions workflow สำหรับ **auto build → test → push Docker image**  
 
 ---
 
 ## Project Structure
 
-```
 Docker-T.pop/
-├── src/                    # หน้าเว็บ HTML/JS
-│   └── index.html
-├── tests/                  # Robot Framework test
-│   └── login_test.robot
+├── src/ # หน้าเว็บ HTML/JS + login logic
+│ ├── index.html
+│ └── login.js
+├── tests/ # Unit test ด้วย Jest
+│ └── login.test.js
 ├── .github/
-│   └── workflows/
-│       └── deploy.yml      # CI/CD workflow
-├── Dockerfile              # Build Docker image
-├── .dockerignore           # ไม่ให้ไฟล์ไม่จำเป็นติดไปใน image
+│ └── workflows/
+│ └── deploy.yml # CI/CD workflow
+├── Dockerfile # Build Docker image
+├── .dockerignore # ไฟล์ที่ไม่ต้องเอาไปใน Docker image
 ├── .gitignore
 └── README.md
-```
 
----
-
-## Usage
-
-### Run locally
-
-1. Build Docker image
-
-```bash
-docker build -t docker-tpop .
-```
-
-2. Run container
-
-```bash
-docker run -d -p 8080:80 docker-tpop
-```
-
-3. Open Web browser
-
-```
-http://localhost:8080
-```
-
----
-
-### Run Robot Framework Test
-
-```bash
-robot tests/login_test.robot
-```
-
-* จะเปิด browser → เข้าเว็บ → ตรวจสอบว่ามีข้อความ "Login"
-* ถ้า test fail → workflow fail
-
----
-
-## CI/CD Workflow
-
-Workflow อยู่ที่ `.github/workflows/deploy.yml`
-ทำงานเมื่อ push ไป branch `main` ดังนี้:
-
-1. Checkout code
-2. Setup Python + Robot Framework
-3. Build Docker image
-4. Run container + Robot test
-5. Stop container
-6. Push Docker image ไป Docker Hub
-
-> ต้องตั้ง Secrets บน GitHub:
->
-> * `DOCKER_USERNAME`
-> * `DOCKER_PASSWORD`
+yaml
+Copy code
 
 ---
 
 ## Users
 
-* Username/Password ใน mockup:
+**Username / Password ใน mockup:**  
 
-  * `admin` / `1234`
-  * `student` / `abcd`
+| Username | Password |
+|----------|----------|
+| admin    | 1234     |
+| student  | abcd     |
 
 ---
 
-## Workflow Diagram
+## Usage
 
-```
+### Run locally (Docker)
+
+1. Build Docker image
+```bash
+docker build -t docker-tpop .
+Run container
+
+bash
+Copy code
+docker run -d -p 8080:80 --name docker-tpop docker-tpop
+เปิดเว็บเบราว์เซอร์
+
+arduino
+Copy code
+http://localhost:8080
+Run Unit Test (Jest)
+จากโฟลเดอร์ src/:
+
+bash
+Copy code
+npm test
+ตรวจสอบ login function ทั้งหมด: admin login, student login, wrong password, non-existing user
+
+CI/CD Workflow (GitHub Actions)
+Workflow อยู่ที่ .github/workflows/deploy.yml
+
+ทำงานเมื่อ push ไป branch main:
+
+Checkout code
+
+Setup Node.js + Docker
+
+Run Unit Test (npm test)
+
+Build Docker image
+
+Push image ไป Docker Hub
+
+GitHub Secrets ที่ต้องตั้งค่า:
+
+DOCKER_USERNAME → Docker Hub username
+
+DOCKER_PASSWORD → Docker Hub password
+
+Workflow Diagram:
+
+sql
+Copy code
           +------------------+
           |    PM / Dev      |
-          | เขียน code + Dockerfile + Robot test |
+          | เขียน code + Dockerfile + Unit test |
           +--------+---------+
                    |
           git push/merge
@@ -110,30 +107,21 @@ Workflow อยู่ที่ `.github/workflows/deploy.yml`
           +--------+---------+
                    |
          +---------+---------+
+         | Run Unit Tests    |
+         +---------+---------+
+                   |
+         +---------+---------+
          | Build Docker image |
-         +---------+---------+
-                   |
-         +---------+---------+
-         | Run container      |
-         +---------+---------+
-                   |
-         +---------+---------+
-         | Run Robot tests    |
-         |   หรือ curl check  |
-         +---------+---------+
-                   |
-         +---------+---------+
-         | Stop container     |
          +---------+---------+
                    |
          +---------+---------+
          | Push image to Hub  |
          +------------------+
-```
+Notes
+หน้าเว็บเป็น mockup login สำหรับ demonstration
 
----
+Logic ของ login อยู่ใน login.js
 
-## Notes
+Unit test อยู่ใน tests/login.test.js
 
-* Project นี้เหมาะสำหรับ **PM / Dev / Tester practice CI/CD + Docker + Automation Test**
-* หน้าเว็บเป็น **mockup** ง่าย ๆ เพื่อ demo flow ระบบ deployment
+CI/CD workflow จะไม่ deploy ถ้า unit test fail
