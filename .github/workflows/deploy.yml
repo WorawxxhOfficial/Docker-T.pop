@@ -17,11 +17,16 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Check files (debug)
+        run: ls -R
+
       - name: Install dependencies
         run: npm install
+        working-directory: ./src
 
       - name: Run Unit & Integration Tests
         run: npm test
+        working-directory: ./src
 
       - name: Build Docker image
         run: docker build -t ${{ secrets.DOCKER_USERNAME }}/docker-tpop:latest .
