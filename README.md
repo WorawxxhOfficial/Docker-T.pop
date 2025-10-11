@@ -2,43 +2,42 @@
 
 ## Overview
 
-โปรเจกต์นี้เป็น **Web Mockup Login** แบบง่าย สำหรับ **Project Deployment & CI/CD Practice**  
+โปรเจกต์นี้เป็น **Web Mockup Login** แบบง่าย สำหรับ **Project Deployment & CI/CD Practice**
 
-- หน้า Login page แบบ HTML + JS  
-- เก็บ username/password แบบง่ายใน array  
-- ใช้ Docker container serve หน้าเว็บด้วย **nginx**  
-- มี **Unit Test** ด้วย **Jest** สำหรับตรวจสอบฟังก์ชัน login  
-- GitHub Actions workflow สำหรับ **auto build → test → push Docker image**  
+* หน้า Login page แบบ HTML + JS
+* เก็บ username/password แบบง่ายใน array
+* ใช้ Docker container serve หน้าเว็บด้วย **nginx**
+* มี **Unit Test** ด้วย **Jest** สำหรับตรวจสอบฟังก์ชัน login
+* พร้อม GitHub Actions workflow สำหรับ **auto build → test → push Docker image**
 
 ---
 
 ## Project Structure
 
+```
 Docker-T.pop/
-├── src/ # หน้าเว็บ HTML/JS + login logic
-│ ├── index.html
-│ └── login.js
-├── tests/ # Unit test ด้วย Jest
-│ └── login.test.js
+├── src/                  # หน้าเว็บ HTML/JS + login logic
+│   ├── index.html
+│   └── login.js
+├── tests/                # Unit test ด้วย Jest
+│   └── login.test.js
 ├── .github/
-│ └── workflows/
-│ └── deploy.yml # CI/CD workflow
-├── Dockerfile # Build Docker image
-├── .dockerignore # ไฟล์ที่ไม่ต้องเอาไปใน Docker image
+│   └── workflows/
+│       └── deploy.yml   # CI/CD workflow
+├── Dockerfile            # Build Docker image
+├── .dockerignore         # ไฟล์ที่ไม่ต้องเอาไปใน Docker image
 ├── .gitignore
 └── README.md
-
-yaml
-Copy code
+```
 
 ---
 
 ## Users
 
-**Username / Password ใน mockup:**  
+**Username / Password ใน mockup:**
 
 | Username | Password |
-|----------|----------|
+| -------- | -------- |
 | admin    | 1234     |
 | student  | abcd     |
 
@@ -48,52 +47,58 @@ Copy code
 
 ### Run locally (Docker)
 
-1. Build Docker image
+1. **Build Docker image**
+
 ```bash
 docker build -t docker-tpop .
-Run container
+```
 
-bash
-Copy code
+2. **Run container**
+
+```bash
 docker run -d -p 8080:80 --name docker-tpop docker-tpop
-เปิดเว็บเบราว์เซอร์
+```
 
-arduino
-Copy code
+3. **Open Web browser**
+
+```
 http://localhost:8080
-Run Unit Test (Jest)
-จากโฟลเดอร์ src/:
+```
 
-bash
-Copy code
+### Run Unit Test (Jest)
+
+จากโฟลเดอร์ `src/`:
+
+```bash
 npm test
+```
+
 ตรวจสอบ login function ทั้งหมด: admin login, student login, wrong password, non-existing user
 
-CI/CD Workflow (GitHub Actions)
-Workflow อยู่ที่ .github/workflows/deploy.yml
+---
 
-ทำงานเมื่อ push ไป branch main:
+## CI/CD Workflow (GitHub Actions)
 
-Checkout code
+Workflow อยู่ที่ `.github/workflows/deploy.yml`
 
-Setup Node.js + Docker
+ทำงานเมื่อ push ไป branch `main`:
 
-Run Unit Test (npm test)
+1. Checkout code
+2. Setup Node.js + Docker
+3. Run Unit Test (`npm test`)
+4. Build Docker image
+5. Push image ไป Docker Hub
 
-Build Docker image
+**GitHub Secrets ที่ต้องตั้งค่า:**
 
-Push image ไป Docker Hub
+* `DOCKER_USERNAME` → Docker Hub username
+* `DOCKER_PASSWORD` → Docker Hub password
 
-GitHub Secrets ที่ต้องตั้งค่า:
+---
 
-DOCKER_USERNAME → Docker Hub username
+## Workflow Diagram
 
-DOCKER_PASSWORD → Docker Hub password
-
-Workflow Diagram:
-
-sql
-Copy code
+```
           +------------------+
           |    PM / Dev      |
           | เขียน code + Dockerfile + Unit test |
@@ -117,11 +122,13 @@ Copy code
          +---------+---------+
          | Push image to Hub  |
          +------------------+
-Notes
-หน้าเว็บเป็น mockup login สำหรับ demonstration
+```
 
-Logic ของ login อยู่ใน login.js
+---
 
-Unit test อยู่ใน tests/login.test.js
+## Notes
 
-CI/CD workflow จะไม่ deploy ถ้า unit test fail
+* หน้าเว็บเป็น mockup login สำหรับ demonstration
+* Logic ของ login อยู่ใน `login.js`
+* Unit test อยู่ใน `tests/login.test.js`
+* CI/CD workflow จะไม่ deploy ถ้า unit test fail
