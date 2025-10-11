@@ -14,27 +14,26 @@
 ---
 
 ## Project Structure
-
+```
 Docker-T.pop/
-
-├── src/ # หน้าเว็บ HTML/JS + login logic
+├── src/                     # หน้าเว็บ HTML/JS + login logic
 │   ├── index.html
 │   └── login.js
-├── tests/ # Unit test ด้วย Jest
-│   ├── login.admin.test.js
-│   ├── login.student.test.js
-│   ├── login.wrongpassword.test.js
-│   ├── login.nonuser.test.js
-│   ├── login.edgecase.test.js
-│   └── login.integration.test.js
+├── tests/                   # Unit Test & Integration Test
+│   ├── login.admin.test.js          # Unit Test 1: admin login
+│   ├── login.student.test.js        # Unit Test 2: student login
+│   ├── login.wrongpassword.test.js  # Unit Test 3: wrong password
+│   ├── login.nonuser.test.js        # Unit Test 4: non-existing user
+│   ├── login.edgecase.test.js       # Unit Test 5: edge case
+│   └── login.integration.test.js    # Integration Test: รวม flow login ทั้งหมด
 ├── .github/
-│   └── workflows/deploy.yml
-├── Dockerfile
-├── .dockerignore
+│   └── workflows/
+│       └── deploy.yml        # CI/CD workflow
+├── Dockerfile                # Build Docker image
+├── .dockerignore             # ไฟล์ที่ไม่ต้องเอาไปใน Docker image
 ├── .gitignore
-└── README.md
+└── README.md                 # อธิบายการใช้งาน + assign งานเพื่อน
 ```
-
 ---
 
 ## Users
