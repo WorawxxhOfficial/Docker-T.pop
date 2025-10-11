@@ -1,4 +1,4 @@
-const { login } = require('../src/login');
+const { login } = require('../login');
 
 test('empty username/password fails', () => {
   expect(login('', '')).toBe(false);
