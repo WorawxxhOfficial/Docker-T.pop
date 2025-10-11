@@ -8,7 +8,7 @@ function login(username, password) {
 
 module.exports = { login };
 
-// ✅ Run only in browser
+// browser
 if (typeof document !== 'undefined') {
   document.getElementById('loginForm')?.addEventListener('submit', e => {
     e.preventDefault();

@@ -6,7 +6,7 @@ describe('Frontend Integration Test', () => {
   let dom, document;
 
   beforeAll(() => {
-    const html = fs.readFileSync(path.resolve(__dirname, '../index.html'), 'utf8'); // ✅ แก้ตรงนี้
+    const html = fs.readFileSync(path.resolve(__dirname, '../index.html'), 'utf8');
     dom = new JSDOM(html, { runScripts: "dangerously", resources: "usable" });
     document = dom.window.document;
 
