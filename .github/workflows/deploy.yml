@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - unitTest
+
 jobs:
   build-test-push:
     runs-on: ubuntu-latest
